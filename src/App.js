@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faChevronDown, faChevronUp, faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faChevronUp, faCalendarAlt, faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import Dropdown from './components/Dropdown'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import DatePicker from './components/DatePicker';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import DatePicker from './components/DatePicker'
 
-library.add(faChevronDown)
-library.add(faChevronUp)
-library.add(faCalendarAlt)
+library.add(faChevronDown, faChevronUp, faCalendarAlt, faChevronLeft, faChevronRight)
 
 const Container = styled.div`
   background-color: #fefefe;
@@ -59,6 +57,7 @@ class App extends Component {
         <p>
           Lorem Ipsum
         </p>
+        <DatePicker />
         <p>
           Lorem Ipsum
         </p>
@@ -72,7 +71,6 @@ class App extends Component {
         <p>
           Lorem Ipsum
         </p>
-        <DatePicker />
         <p>
           Lorem Ipsum
         </p>

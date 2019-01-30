@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import DateUtilities from '../DateUtilities'
-import DisplayUtitilites from '../DisplayUtitlities'
+import Calendar from './Calendar'
 
 const DatePickerWrapper = styled.div`
     display: inline-block;
@@ -33,31 +34,11 @@ const DatePickerCalendarIcon = styled(FontAwesomeIcon)`
     color: ${p => p.hover ? "#333" : "#ccc"};
 `
 
-const CalendarWrapper = styled.div`
-    position: absolute;
-    top: 100%;
-    left: 0;
-`
-
-const CalendarContainer = styled.table`
-    background-color: #fff;
-    border: 2px solid #ddd;
-    border-spacing: 0;
-`
-
-const WeekHeader = styled.tr`
-    th {
-        padding: 0.3em 0.5em;
-        font-weight: normal;
-        border-bottom: 1px solid #ddd;
-    }
-`
-
 export default class DatePicker extends Component {
 
     constructor(props) {
         super(props)
-        var def = props.selected || new Date()
+        const def = props.selected || new Date()
         this.state = {
             view: DateUtilities.clone(def),
             selected: DateUtilities.clone(def),
@@ -65,65 +46,36 @@ export default class DatePicker extends Component {
             maxDate: null,
             visible: false,
         }
+        this.calendarRef = React.createRef()
+    }
+
+    componentDidMount = () => {
+        document.addEventListener("click", this.hideOnDocumentClick)
+    }
+
+    componentWillUnmount = () => {
+        document.removeEventListener("click", this.hideOnDocumentClick)
+    }
+
+    hideOnDocumentClick = (e) => {
+        const elem = ReactDOM.findDOMNode(this.calendarRef.current)
+        if (!elem.contains(e.target)) {
+            this.hide()
+        }
+    }
+
+    hide = () => {
+        this.calendarRef.current.hide()
     }
 
     render() {
-        const calendarZIndex = DisplayUtitilites.maxZIndex() + 10
         return (
             <DatePickerWrapper>
                 <DatePickerInputWrapper>
                     <DateInput />
                     <DatePickerCalendarIcon icon="calendar-alt" />
                 </DatePickerInputWrapper>
-                <CalendarWrapper style={{ zIndex: calendarZIndex }}>
-                    <CalendarContainer>
-                        <WeekHeader>
-                            <th>Sun</th>
-                            <th>Mon</th>
-                            <th>Tue</th>
-                            <th>Wed</th>
-                            <th>Thu</th>
-                            <th>Fri</th>
-                            <th>Sat</th>
-                        </WeekHeader>
-                        <tr>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                        </tr>
-                        <tr>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                        </tr>
-                        <tr>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                        </tr>
-                        <tr>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                            <td>01</td>
-                        </tr>
-                    </CalendarContainer>
-                </CalendarWrapper>
+                <Calendar ref={this.calendarRef} id={this.state.id} view={this.state.view} selected={this.state.selected} onSelect={this.onSelect} minDate={this.state.minDate} maxDate={this.state.maxDate}/>
             </DatePickerWrapper>
         )
     }
