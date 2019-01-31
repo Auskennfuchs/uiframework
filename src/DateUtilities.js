@@ -14,11 +14,11 @@ const DateUtilities = {
     ,
 
     toDayOfMonthString: (date) =>
-        DateUtilities.pad(date.getDate().toString())
+        DateUtilities.pad(date.getDate().toString(),2)
     ,
 
     toMonthAndYearString: (date) => {
-        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+        const months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"]
         return months[date.getMonth()] + " " + date.getFullYear()
     },
 

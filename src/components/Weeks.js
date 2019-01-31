@@ -53,7 +53,6 @@ export default class Weeks extends Component {
     }
 
     componentDidMount = () => {
-        console.log(this.currentRef.current)
         this.currentRef.current.addEventListener("transitionend", this.onTransitionEnd)
     }
 

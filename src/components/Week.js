@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import styled,{css} from 'styled-components'
+import styled, { css } from 'styled-components'
 import DateUtilities from '../DateUtilities'
 
 const WeekContainer = styled.div`
@@ -10,14 +10,23 @@ const WeekContainer = styled.div`
 const Day = styled.div`
     text-align: center;
     width: 3em;
-    padding: 0.3em 0;
+    padding: 0.5em 0;
+    cursor: pointer;
 
     color: ${p => p.otherMonth ? '#ddd' : '#333'};
 
-    ${p=>p.today ? css`
+    &:hover {
+        background-color: #eee;
+    }
+
+    ${p => p.today ? css`
         background-color: #ccc;
         color: #000;
-    `:""}
+    `: ""}
+
+    ${p => p.selected ? css`
+        border: 1px solid #f00;
+    `: ""}
 `
 
 export default class Week extends Component {
@@ -39,6 +48,12 @@ export default class Week extends Component {
         disabled: this.isDisabled(day),
     })
 
+    onSelect = (day) => {
+        if (!this.isDisabled(day)) {
+            this.props.onSelect(day)
+        }
+    }
+
     isDisabled = (day) => {
         const { minDate, maxDate } = this.props
         return (minDate && DateUtilities.isBefore(day, minDate)) || (maxDate && DateUtilities.isAfter(day, maxDate))
@@ -51,7 +66,7 @@ export default class Week extends Component {
                 {days.map((day, idx) => {
                     const dayProps = this.getDayClassName(day)
                     return (
-                        <Day key={idx} {...dayProps}>
+                        <Day key={idx} {...dayProps} onClick={() => this.onSelect(day)}>
                             {DateUtilities.toDayOfMonthString(day)}
                         </Day>
                     )

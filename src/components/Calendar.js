@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import DisplayUtitilites from '../DisplayUtitlities'
 import Weeks from './Weeks';
 import MonthHeader from './MonthHeader';
@@ -8,6 +8,11 @@ const CalendarWrapper = styled.div`
     position: absolute;
     top: 100%;
     left: 0;
+    display: none;
+
+    ${p => p.visible ? css`
+        display: block;
+    `: ""}
 `
 
 const CalendarContainer = styled.div`
@@ -39,15 +44,11 @@ export default class Calendar extends Component {
         this.weeksRef = React.createRef()
     }
 
-    componentDidMount() {
-        this.show({ top: 0, left: 0 })
-    }
-
     onMove = (view, isForward) => {
         this.weeksRef.current.moveTo(view, isForward)
     }
 
-    onTransitionEnd = ()  => {
+    onTransitionEnd = () => {
         this.monthHeaderRef.current.enable()
     }
 
@@ -71,9 +72,9 @@ export default class Calendar extends Component {
     }
 
     render() {
-        const { calendarZIndex } = this.state
+        const { calendarZIndex, visible } = this.state
         return (
-            <CalendarWrapper style={{ zIndex: calendarZIndex }} ref={this.calendarRef}>
+            <CalendarWrapper style={{ zIndex: calendarZIndex }} ref={this.calendarRef} visible={visible}>
                 <CalendarContainer>
                     <MonthHeader ref={this.monthHeaderRef} view={this.props.view} onMove={this.onMove} />
                     <WeekHeader>

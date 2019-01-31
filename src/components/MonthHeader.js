@@ -84,7 +84,7 @@ export default class MonthHeader extends Component {
         const { enabled } = this.state
         return (
             <MonthContainer>
-                <PageButton onClick={this.moveBackward}>
+                <PageButton onClick={this.moveBackward} enabled={enabled}>
                     <PageButtonIcon icon="chevron-left" />
                 </PageButton>
                 <MonthText>{DateUtilities.toMonthAndYearString(this.state.view)}</MonthText>

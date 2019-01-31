@@ -47,6 +47,7 @@ export default class DatePicker extends Component {
             visible: false,
         }
         this.calendarRef = React.createRef()
+        this.triggerRef = React.createRef()
     }
 
     componentDidMount = () => {
@@ -57,10 +58,34 @@ export default class DatePicker extends Component {
         document.removeEventListener("click", this.hideOnDocumentClick)
     }
 
+    onSelect = (day) => {
+        this.setState({ selected: day })
+        this.hide()
+
+        if (this.props.onSelect) {
+            this.props.onSelect(day)
+        }
+    }
+
     hideOnDocumentClick = (e) => {
+        const triggerElem = ReactDOM.findDOMNode(this.triggerRef.current)
         const elem = ReactDOM.findDOMNode(this.calendarRef.current)
-        if (!elem.contains(e.target)) {
+        if (triggerElem && !triggerElem.contains(e.target) &&
+            elem && !elem.contains(e.target)) {
             this.hide()
+        }
+    }
+
+    show = () => {
+        const trigger = ReactDOM.findDOMNode(this.triggerRef.current),
+            rect = trigger.getBoundingClientRect(),
+            isTopHalf = rect.top > window.innerHeight / 2,
+            calendarHeight = 203
+        if (this.calendarRef.current) {
+            this.calendarRef.current.show({
+                top: isTopHalf ? (rect.top + window.scrollY - calendarHeight - 3) : (rect.top + trigger.clientHeight + window.scrollY + 3),
+                left: rect.left
+            })
         }
     }
 
@@ -72,10 +97,10 @@ export default class DatePicker extends Component {
         return (
             <DatePickerWrapper>
                 <DatePickerInputWrapper>
-                    <DateInput />
+                    <DateInput ref={this.triggerRef} onClick={this.show} value={DateUtilities.toString(this.state.selected)} />
                     <DatePickerCalendarIcon icon="calendar-alt" />
                 </DatePickerInputWrapper>
-                <Calendar ref={this.calendarRef} id={this.state.id} view={this.state.view} selected={this.state.selected} onSelect={this.onSelect} minDate={this.state.minDate} maxDate={this.state.maxDate}/>
+                <Calendar ref={this.calendarRef} id={this.state.id} view={this.state.view} selected={this.state.selected} onSelect={this.onSelect} minDate={this.state.minDate} maxDate={this.state.maxDate} />
             </DatePickerWrapper>
         )
     }
